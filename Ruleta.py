@@ -2,97 +2,61 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Definición de la función para simular el lanzamiento de la ruleta
-def lanzamiento_ruleta():
-    return random.randint(0, 36)
+# Número de tiradas
+num_tiradas = 1000
 
-# Definición de la cantidad de lanzamientos
-num_lanzamientos = 100
+# Lista para almacenar los resultados de las tiradas
+resultados = []
 
-# Simulación de los lanzamientos de la ruleta y almacenamiento de los resultados en una lista
-resultados = [lanzamiento_ruleta() for i in range(num_lanzamientos)]
+# Realizar las tiradas
+for i in range(num_tiradas):
+    resultados.append(random.randint(0, 36))
 
-# Cálculo de las estadísticas de los resultados
-promedio = np.mean(resultados)
+# Cálculo de estadísticas
+promedio = sum(resultados)/num_tiradas
 mediana = np.median(resultados)
-desviacion_estandar = np.std(resultados)
+varianza = np.var(resultados)
+desvio_estandar = np.std(resultados)
 
-# Impresión de las tiradas
-print("resultados: ", resultados)
+# Cálculo de la frecuencia relativa
+frecuencia_relativa = [resultados.count(i)/num_tiradas for i in range(37)]
 
-# Cálculo de la tabla de frecuencias
-valores, frecuencias = np.unique(resultados, return_counts=True)
-tabla_frecuencias = np.column_stack((valores, frecuencias))
+# Gráfico del promedio por número de tiradas
+promedio_por_tirada = []
+for i in range(num_tiradas):
+    promedio_por_tirada.append(sum(resultados[0:i+1])/(i+1))
 
-# Impresión de la tabla de frecuencias
-print("Tabla de frecuencias:")
-print(tabla_frecuencias)
-
-# Cálculo de la frecuencia absoluta acumulada
-frec_abs_acum = np.cumsum(frecuencias)
-
-# Agregar la frecuencia relativa y la frecuencia relativa acumulada a la tabla de frecuencias
-tabla_frecuencias_acum = np.column_stack((tabla_frecuencias, frec_abs_acum))
-
-# Impresión de la tabla de frecuencias
-print("Tabla de frecuencias acumuladas:")
-print(tabla_frecuencias_acum)
-
-# Cálculo de la frecuencia relativa y la frecuencia relativa acumulada
-frec_relativa = frecuencias / num_lanzamientos
-frec_relativa_acum = np.cumsum(frec_relativa)
-
-# Agregar la frecuencia relativa y la frecuencia relativa acumulada a la tabla de frecuencias
-tabla_frecuencias_rel = np.column_stack((tabla_frecuencias, frec_relativa))
-
-# Impresión de la tabla de frecuencias relativas
-print("Tabla de frecuencias relativa:")
-print(tabla_frecuencias_rel)
-
-# Impresión de las estadísticas
-print("Promedio: ", promedio)
-print("Mediana: ", mediana)
-print("Desviación estándar: ", desviacion_estandar)
-
-# Graficación de los resultados
-plt.hist(resultados, bins=range(0, 37, 1))
-plt.title("Histograma de resultados de la ruleta")
-plt.xlabel("Número")
-plt.ylabel("Frecuencia")
+plt.plot(range(1, num_tiradas+1), promedio_por_tirada)
+plt.title('Promedio por número de tiradas')
+plt.xlabel('Número de tiradas')
+plt.ylabel('Promedio')
 plt.show()
 
-# Graficación de los resultados
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(8, 16))
+# Gráfico de la varianza por número de tiradas
+varianza_por_tirada = []
+for i in range(num_tiradas):
+    varianza_por_tirada.append(np.var(resultados[0:i+1]))
 
-# Gráfica de la frecuencia relativa
-ax1.bar(valores, frec_relativa)
-ax1.set_title("Frecuencia relativa")
-ax1.set_xlabel("Número")
-ax1.set_ylabel("Frecuencia relativa")
+plt.plot(range(1, num_tiradas+1), varianza_por_tirada)
+plt.title('Varianza por número de tiradas')
+plt.xlabel('Número de tiradas')
+plt.ylabel('Varianza')
+plt.show()
 
-# Gráfica del valor promedio de las tiradas
-ax2.plot([1, num_lanzamientos], [promedio, promedio], 'r--')
-ax2.set_title("Valor promedio de las tiradas")
-ax2.set_xlabel("Número de tiradas")
-ax2.set_ylabel("Valor promedio")
+# Gráfico del desvío estándar por número de tiradas
+desvio_por_tirada = []
+for i in range(num_tiradas):
+    desvio_por_tirada.append(np.std(resultados[0:i+1]))
 
-# Gráfica del valor del desvío
-desvio_por_tirada = np.zeros(num_lanzamientos)
-for i in range(num_lanzamientos):
-    desvio_por_tirada[i] = np.std(resultados[:i+1])
-ax3.plot(range(num_lanzamientos), desvio_por_tirada)
-ax3.set_title("Valor del desvío")
-ax3.set_xlabel("Número de tiradas")
-ax3.set_ylabel("Valor del desvío")
+plt.plot(range(1, num_tiradas+1), desvio_por_tirada)
+plt.title('Desvío estándar por número de tiradas')
+plt.xlabel('Número de tiradas')
+plt.ylabel('Desvío estándar')
+plt.show()
 
-# Gráfica de la varianza
-varianza_por_tirada = np.zeros(num_lanzamientos)
-for i in range(num_lanzamientos):
-    varianza_por_tirada[i] = np.var(resultados[:i+1])
-ax4.plot(range(num_lanzamientos), varianza_por_tirada)
-ax4.set_title("Varianza")
-ax4.set_xlabel("Número de tiradas")
-ax4.set_ylabel("Valor de la Varianza")
-
-plt.tight_layout()
+# Gráfico de la frecuencia relativa
+plt.bar(range(37), frecuencia_relativa)
+plt.title('Frecuencia relativa')
+plt.xlabel('Número')
+plt.ylabel('Frecuencia relativa')
 plt.show()
