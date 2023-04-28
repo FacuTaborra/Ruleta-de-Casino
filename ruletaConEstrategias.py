@@ -39,6 +39,7 @@ def ConCapitalInFinito():
 
         # Modificar apuesta segun resultados
         if apuesta != resultados[i]:
+            print("Perdi")
             if i > 0:
                 cajaM.append(cajaM[i - 1] - monto1)
                 cajaD.append(cajaD[i - 1] - monto2)
@@ -52,21 +53,24 @@ def ConCapitalInFinito():
 
             montosD.append(monto2)
             monto2 += 1
-
         else:
+            print("Gane")
             if i > 0:
-                cajaM.append(cajaM[i - 1] + monto1)
-                cajaD.append(cajaD[i - 1] + monto2)
-                cajaA.append(cajaA[i - 1] + montosA[i])
+                cajaM.append(cajaM[i - 1] + (monto1 * 35))
+                cajaD.append(cajaD[i - 1] + (monto2 * 35))
+                cajaA.append(cajaA[i - 1] + (montosA[i] * 35))
             else:
-                cajaM.append(+monto1)
-                cajaD.append(+monto2)
-                cajaA.append(+montosA[i])
+                cajaM.append(+monto1*35)
+                cajaD.append(+monto2*35)
+                cajaA.append(+montosA[i]*35)
             montosM.append(monto1)
             monto1 = 1
 
             montosD.append(monto2)
             monto2 -= 1
+
+    print("numero aleatoreo para las estrategias con capital infinito " + str(apuesta))
+
 
     # Muestra de monto apostado y resultado
     print("Metodo: La Martingala")
@@ -80,7 +84,6 @@ def ConCapitalInFinito():
               "      Monto apostado: ", montosD[i])
     print("")
 
-    print("numero aleatoreo para la apuesta sin estrategia" + str(apuesta))
     print("Metodo: Creado")
     for i in range(num_tiradas):
         print("Numero de tirada: ", i + 1, "     Resultado: ", resultados[i], "     Caja: ", cajaA[i],
